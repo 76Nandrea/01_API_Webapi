@@ -1,0 +1,66 @@
+﻿@page "/"
+@using API_Gepiparri.DAL.Model
+@using BlazorApp_api_static.Viewmodel
+@inject HttpClient HttpClient
+
+
+
+<PageTitle>Home</PageTitle>
+
+<h3>WeatherForecast</h3>
+
+<table>
+
+    <thead>
+     <tr>
+         <td>Dátum</td>
+            <td>Hőmérséklet</td>
+            <td>Leírás</td>
+     </tr>
+    </thead>
+
+    @foreach (var itemweather in weatherList)
+    {
+        <tr>
+            <th>@itemweather.Date</th>
+            <th>@itemweather.TemperatureC</th>
+            <th>@itemweather.Summary</th>
+        </tr>
+    }
+    <tbody>
+    </tbody>
+</table>
+
+<h2>User</h2>
+<table>
+
+    <thead>
+        <tr>
+            <td>Full Name</td>
+            <td>Email</td>
+            <td>Password</td>
+        </tr>
+    </thead>
+
+    @foreach (var user in UsersList)
+    {
+        <tr>
+            <th>@user.FullName</th>
+            <th>@user.Email</th>
+            <th>@user.Password</th>
+        </tr>
+    }
+    <tbody>
+    </tbody>
+</table>
+
+@code{
+    List<WeatherForecastVM> weatherList = new();
+    List<UserVM>  UsersList= new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        weatherList = await HttpClient.GetFromJsonAsync<List<WeatherForecastVM>>("WeatherForecast");
+        UsersList = await HttpClient.GetFromJsonAsync<List<UserVM>>("api/user");
+    }
+}
